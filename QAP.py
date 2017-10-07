@@ -6,6 +6,9 @@ class Qap:
         self.solution = self.generate_solution()
 
     def generate_solution(self):
+        """
+        :return: an array with a solution
+        """
         solution = []
 
         for i in range(0, self.solution_size):
@@ -16,7 +19,9 @@ class Qap:
         return solution
 
     def __generate_locations(self):
-
+        """
+        :return: a matrix with locations load in a file
+        """
         with open("test.txt", "r") as f:
             data = f.readlines()
 
@@ -30,6 +35,9 @@ class Qap:
         return locations
 
     def __generate_facilities(self):
+        """
+        :return: a matrix with facilities load in a file
+        """
         with open("test.txt", "r") as f:
             data = f.readlines()
 
@@ -44,11 +52,11 @@ class Qap:
 
     def compute_delta(self, i, j):
         """
-        Incremental evaluation for a swap of i and j
-        Complexity: O(n)
-
         :param i: index to swap
         :param j: index to swap
+        :type i: int
+        :type j: int
+        :return: Incremental evaluation for a swap of i and j ( Complexity: O(n) )
         """
         delta = (self.mat_locations[i][i] - self.mat_locations[j][j]) \
                 * (self.mat_facilities[self.solution[j]][self.solution[j]]
