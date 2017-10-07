@@ -1,19 +1,21 @@
 class Qap:
     def __init__(self, solution_size):
+        self.solution_size = solution_size
         self.mat_locations = self.__generate_locations()
         self.mat_facilities = self.__generate_facilities()
-        self.solution = self.generate_solution(solution_size=solution_size)
+        self.solution = self.generate_solution()
 
-    def generate_solution(self, solution_size):
-        solution = ""
+    def generate_solution(self):
+        solution = []
 
-        for i in range(0, solution_size):
-            solution += str(i) + "-"
+        for i in range(0, self.solution_size):
+            solution.append(i)
 
-        return solution[:-1]
+        # Solution of test
+        # return [4,2,1,9,7,3,0,8,6,5]
+        return solution
 
-    @staticmethod
-    def __generate_locations():
+    def __generate_locations(self):
 
         with open("test.txt", "r") as f:
             data = f.readlines()
@@ -21,26 +23,53 @@ class Qap:
         i_line = 0
         locations = []
         for line in data:
-            if i_line in range(1, 31):
-                locations.append(list(map(int, line[:-1].split(sep=" ", maxsplit=29))))
+            if i_line in range(1, self.solution_size + 1):
+                locations.append(list(map(int, line[:-1].split(sep=" ", maxsplit=self.solution_size - 1))))
             i_line = i_line + 1
 
         return locations
 
-    @staticmethod
-    def __generate_facilities():
+    def __generate_facilities(self):
         with open("test.txt", "r") as f:
             data = f.readlines()
 
         i_line = 0
         facilities = []
         for line in data:
-            if i_line in range(32, 62):
-                facilities.append(list(map(int, line[:-1].split(sep=" ", maxsplit=29))))
+            if i_line in range(self.solution_size + 2, (self.solution_size*2) + 2):
+                facilities.append(list(map(int, line[:-1].split(sep=" ", maxsplit=self.solution_size - 1))))
             i_line = i_line + 1
 
         return facilities
 
+    def compute_delta(self, i, j):
+        """
+        Incremental evaluation for a swap of i and j
+        Complexity: O(n)
+
+        :param i: index to swap
+        :param j: index to swap
+        """
+        delta = (self.mat_locations[i][i] - self.mat_locations[j][j]) \
+                * (self.mat_facilities[self.solution[j]][self.solution[j]]
+                   - self.mat_facilities[self.solution[i]][self.solution[i]])\
+                + \
+                (self.mat_locations[i][j] - self.mat_locations[j][i]) \
+                * (self.mat_facilities[self.solution[j]][self.solution[i]]
+                   - self.mat_facilities[self.solution[i]][self.solution[j]])
+
+        for k in range(self.solution_size):
+            if k not in [i, j]:
+                delta = delta + (self.mat_locations[k][i] - self.mat_locations[k][j]) \
+                                * (self.mat_facilities[self.solution[k]][self.solution[j]]
+                                   - self.mat_facilities[self.solution[k]][self.solution[i]]) \
+                                + \
+                                (self.mat_locations[i][k] - self.mat_locations[j][k]) \
+                                * (self.mat_facilities[self.solution[j]][self.solution[k]]
+                                   - self.mat_facilities[self.solution[i]][self.solution[k]])
+
+        return delta
+
 
 q = Qap(10)
-print(q.mat_locations)
+print(q.compute_delta(3, 8))
