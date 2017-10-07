@@ -78,6 +78,48 @@ class Qap:
 
         return delta
 
+    def compute_delta_fast(self, delta, i, j, i2, j2):
+        """
+         For ex. see E. Taillard, "COMPARISON OF ITERATIVE SEARCHES FOR THE QUADRATIC ASSIGNMENT PROBLEM",
+         ECOLE PLOYTECHNIQUE FÉDÉRALE DE LAUSANNE (EPFL), 1994.
+
+        :param i: index of previous swap
+        :param j: index of previous swap
+        :param i2: index to swap
+        :param j2: index to swap
+        :param delta: previous delta compute for the swap of i and j
+        :type i: int
+        :type j: int
+        :type i2: int
+        :type j2: int
+        :type delta: int
+        :return: double incremental evaluation for a swap of i2 and j2 after i and j
+        """
+
+        if i == i2 & j == j2:
+            return -delta
+        elif i2 == i | i2 == j | j2 == i | j2 == j:
+            return self.compute_delta(i=i2, j=j2)
+        else:
+            return (delta
+                    + (self.mat_locations[i][i2]
+                       - self.mat_locations[i][j2]
+                       + self.mat_locations[j][j2]
+                       - self.mat_locations[j][i2])
+                    * (self.mat_facilities[self.solution[j]][self.solution[i2]]
+                       - self.mat_facilities[self.solution[j]][self.solution[j2]]
+                       + self.mat_facilities[self.solution[i]][self.solution[j2]]
+                       - self.mat_facilities[self.solution[i]][self.solution[i2]])
+                    + (self.mat_locations[i2][i]
+                       - self.mat_locations[j2][i]
+                       + self.mat_locations[j2][j]
+                       - self.mat_locations[i2][j])
+                    * (self.mat_facilities[self.solution[i2]][self.solution[j]]
+                       - self.mat_facilities[self.solution[j2]][self.solution[j]]
+                       + self.mat_facilities[self.solution[j2]][self.solution[i]]
+                       - self.mat_facilities[self.solution[i2]][self.solution[i]])
+                    )
+
 
 q = Qap(10)
 print(q.compute_delta(3, 8))
