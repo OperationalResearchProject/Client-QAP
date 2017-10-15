@@ -1,9 +1,10 @@
 class Qap:
     def __init__(self, solution_size):
         self.solution_size = solution_size
+        self.solution = self.generate_solution()
         self.mat_locations = self.__generate_locations()
         self.mat_facilities = self.__generate_facilities()
-        self.solution = self.generate_solution()
+        self.deltas = self.__init_deltas()
 
     def generate_solution(self):
         """
@@ -49,6 +50,19 @@ class Qap:
             i_line = i_line + 1
 
         return facilities
+
+    def __init_deltas(self):
+        """
+        :return: an initialized matrix with computed deltas
+        """
+        deltas = []
+        for i in range(self.solution_size):
+            delta_l = []
+            for j in range(self.solution_size):
+                delta_l.append(self.compute_delta(i, j))
+            deltas.append(delta_l)
+
+        return deltas
 
     def compute_delta(self, i, j):
         """
@@ -122,4 +136,5 @@ class Qap:
 
 
 q = Qap(10)
+print(q.deltas)
 print(q.compute_delta(3, 8))
