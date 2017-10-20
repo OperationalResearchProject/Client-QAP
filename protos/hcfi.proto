@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+
+package hcfi;
+
+service HillClimberService {
+    rpc InitTransaction (InitTransactionRequest) returns (GenericFitnessResponse) {}
+    rpc SendFitness (GenericFitnessRequest) returns (GenericFitnessResponse) {}
+    rpc StopTransaction (StopRequest) returns (StopResponse) {}
+}
+
+import "messages.proto";

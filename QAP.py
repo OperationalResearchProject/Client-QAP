@@ -19,6 +19,14 @@ class Qap:
         # return [4,2,1,9,7,3,0,8,6,5]
         return solution
 
+    def to_string(self):
+        res = ''
+        for i in range(0, int(self.solution_size)):
+            res += str(self.solution[i]) + '-'
+
+        return res[:-1]
+
+
     def __generate_locations(self):
         """
         :return: a matrix with locations load in a file
@@ -135,6 +143,3 @@ class Qap:
                     )
 
 
-q = Qap(10)
-print(q.deltas)
-print(q.compute_delta(3, 8))
