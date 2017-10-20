@@ -42,7 +42,29 @@ def process_ts(channel, qap):
 			solution=qap.to_string()
 	))
 
-	print(response)
+	for i in range(10):
+		# compute fitness
+		fitnesses = []
+
+		for j in range(0, len(response.solutions)):
+			fitnesses.append(qap.compute_delta(response.solutions[j].i, response.solutions[j].j))
+
+		# send fitness
+		mess = messages_pb2.MultiFitnessRequest(
+				id=response.id,
+				fitnesses=fitnesses
+		)
+
+		# send solutions
+		for s in response.solutions:
+			sol = mess.solutions.add()
+			sol.i = s.i
+			sol.j = s.j
+			sol.mother_solution = s.mother_solution
+
+		response = stub.SendFitness(mess)
+
+		print(response)
 
 
 if __name__ == "__main__":

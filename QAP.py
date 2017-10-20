@@ -72,7 +72,7 @@ class Qap:
 
         return deltas
 
-    def compute_delta(self, i, j):
+    def compute_delta(self, i, j):  # todo : update delta matrix
         """
         :param i: index to swap
         :param j: index to swap
@@ -100,7 +100,7 @@ class Qap:
 
         return delta
 
-    def compute_delta_fast(self, delta, i, j, i2, j2):
+    def compute_delta_fast(self, delta, i, j, i2, j2):  # todo : update delta matrix
         """
          For ex. see E. Taillard, "COMPARISON OF ITERATIVE SEARCHES FOR THE QUADRATIC ASSIGNMENT PROBLEM",
          ECOLE PLOYTECHNIQUE FÉDÉRALE DE LAUSANNE (EPFL), 1994.
