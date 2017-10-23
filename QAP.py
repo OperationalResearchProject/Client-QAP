@@ -16,8 +16,8 @@ class Qap:
             solution.append(i)
 
         # Solution of test
-        #return [4,2,1,9,7,3,0,8,6,5]
-        #return [1,6,7,0,8,3,5,4,2,9]
+        # return [4,2,1,9,7,3,0,8,6,5]
+        # return [1,6,7,0,8,3,5,4,2,9]
         return solution
 
     def to_string(self):
@@ -26,7 +26,6 @@ class Qap:
             res += str(self.solution[i]) + '-'
 
         return res[:-1]
-
 
     def __generate_locations(self):
         """
@@ -82,12 +81,12 @@ class Qap:
         :return: Incremental evaluation for a swap of i and j ( Complexity: O(n) )
         """
         delta = (self.mat_locations[i][i] - self.mat_locations[j][j]) \
-                * (self.mat_facilities[self.solution[j]][self.solution[j]]
-                   - self.mat_facilities[self.solution[i]][self.solution[i]])\
-                + \
-                (self.mat_locations[i][j] - self.mat_locations[j][i]) \
-                * (self.mat_facilities[self.solution[j]][self.solution[i]]
-                   - self.mat_facilities[self.solution[i]][self.solution[j]])
+            * (self.mat_facilities[self.solution[j]][self.solution[j]]
+                - self.mat_facilities[self.solution[i]][self.solution[i]])\
+            + \
+            (self.mat_locations[i][j] - self.mat_locations[j][i]) \
+            * (self.mat_facilities[self.solution[j]][self.solution[i]]
+                - self.mat_facilities[self.solution[i]][self.solution[j]])
 
         for k in range(self.solution_size):
             if k not in [i, j]:
@@ -142,5 +141,3 @@ class Qap:
                        + self.mat_facilities[self.solution[j2]][self.solution[i]]
                        - self.mat_facilities[self.solution[i2]][self.solution[i]])
                     )
-
-
