@@ -64,7 +64,8 @@ def process_ts(channel, qap):
 
 		response = stub.SendFitness(mess)
 
-		print(response)
+	stop = stub.StopTransaction(messages_pb2.StopRequest(id=response.id, message='done'))
+	print("Tabou Search process is ended, the best solution find for this transaction is " + str(stop.fitness))
 
 
 if __name__ == "__main__":

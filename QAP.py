@@ -16,7 +16,8 @@ class Qap:
             solution.append(i)
 
         # Solution of test
-        # return [4,2,1,9,7,3,0,8,6,5]
+        #return [4,2,1,9,7,3,0,8,6,5]
+        #return [1,6,7,0,8,3,5,4,2,9]
         return solution
 
     def to_string(self):
