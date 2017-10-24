@@ -72,6 +72,20 @@ class Qap:
 
         return deltas
 
+    def full_eval(self):
+        """
+        :return: full evaluation of the solution
+        :note : A = mat_locations
+                B = mat_facilities
+        """
+        cost = 0
+
+        for i in range(self.solution_size):
+            for j in range(self.solution_size):
+                cost = cost + self.mat_locations[i][j] * self.mat_facilities[self.solution[i]][self.solution[j]]
+
+        return cost
+
     def compute_delta(self, i, j):  # todo : update delta matrix
         """
         :param i: index to swap
@@ -141,3 +155,8 @@ class Qap:
                        + self.mat_facilities[self.solution[j2]][self.solution[i]]
                        - self.mat_facilities[self.solution[i2]][self.solution[i]])
                     )
+
+    def swap_solution(self, i, j):
+        tmp = self.solution[i]
+        self.solution[i] = self.solution[j]
+        self.solution[j] = tmp
