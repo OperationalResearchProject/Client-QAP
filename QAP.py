@@ -112,7 +112,7 @@ class Qap:
                                 * (self.mat_facilities[self.solution[j]][self.solution[k]]
                                    - self.mat_facilities[self.solution[i]][self.solution[k]])
 
-        self.deltas[i][j] = delta
+        #self.deltas[i][j] = delta
 
         return delta
 
