@@ -3,6 +3,7 @@ from QAP import Qap
 
 qap = Qap(10)
 test_incremental_eval = True
+test_delta_matrix_value = True
 test_double_incremental_eval = True
 
 fitness = qap.full_eval()
@@ -11,8 +12,11 @@ for i in range(qap.solution_size):
 	for j in range(qap.solution_size):
 
 		# compute with delta matrix (incremental evaluation)
-		qap.deltas[i][j] = qap.compute_delta(i, j)
-		fitij = fitness + qap.deltas[i][j]
+		d_computed = qap.compute_delta(i, j)
+		fitij = fitness + d_computed
+
+		if d_computed != qap.deltas[i][j]:
+			test_delta_matrix_value = False
 
 		# compute without delta
 		qap.swap_solution(i, j)
@@ -27,4 +31,5 @@ for i in range(qap.solution_size):
 			print("fitness ij = " + str(fitij))
 
 
-print("All test of incremental evaluation are passed : " + str(test_incremental_eval))
+print("Test of incremental evaluation : " + str(test_incremental_eval))
+print("Test of delta matrix values : " + str(test_delta_matrix_value))

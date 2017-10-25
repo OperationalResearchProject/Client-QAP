@@ -67,7 +67,7 @@ class Qap:
         for i in range(self.solution_size):
             delta_l = []
             for j in range(self.solution_size):
-                delta_l.append(self.compute_delta(i, j))
+                delta_l.append(0)
             deltas.append(delta_l)
 
         return deltas
@@ -111,6 +111,8 @@ class Qap:
                                 (self.mat_locations[i][k] - self.mat_locations[j][k]) \
                                 * (self.mat_facilities[self.solution[j]][self.solution[k]]
                                    - self.mat_facilities[self.solution[i]][self.solution[k]])
+
+        self.deltas[i][j] = delta
 
         return delta
 
