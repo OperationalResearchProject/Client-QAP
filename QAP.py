@@ -157,6 +157,11 @@ class Qap:
                     )
 
     def swap_solution(self, i, j):
+        """
+        :param i: item index of the solution
+        :param j: item index of the solution
+        :return: Swap two items of the solution1
+        """
         tmp = self.solution[i]
         self.solution[i] = self.solution[j]
         self.solution[j] = tmp
