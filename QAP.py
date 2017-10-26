@@ -86,7 +86,7 @@ class Qap:
 
         return cost
 
-    def compute_delta(self, i, j):  # todo : update delta matrix
+    def compute_delta(self, i, j):
         """
         :param i: index to swap
         :param j: index to swap
@@ -112,11 +112,10 @@ class Qap:
                                 * (self.mat_facilities[self.solution[j]][self.solution[k]]
                                    - self.mat_facilities[self.solution[i]][self.solution[k]])
 
-        #self.deltas[i][j] = delta
 
         return delta
 
-    def compute_delta_fast(self, delta, i, j, i2, j2):  # todo : update delta matrix
+    def compute_delta_fast(self, delta, i, j, i2, j2):
         """
          For ex. see E. Taillard, "COMPARISON OF ITERATIVE SEARCHES FOR THE QUADRATIC ASSIGNMENT PROBLEM",
          ECOLE PLOYTECHNIQUE FÉDÉRALE DE LAUSANNE (EPFL), 1994.
@@ -134,9 +133,9 @@ class Qap:
         :return: double incremental evaluation for a swap of i2 and j2 after i and j
         """
 
-        if i == i2 & j == j2:
+        if (i == i2) & (j == j2):
             return -delta
-        elif i2 == i | i2 == j | j2 == i | j2 == j:
+        elif (i2 == i) | (i2 == j) | (j2 == i) | (j2 == j):
             return self.compute_delta(i=i2, j=j2)
         else:
             return (delta

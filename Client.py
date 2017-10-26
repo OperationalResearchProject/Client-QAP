@@ -46,7 +46,7 @@ def process_ts(channel, qap):
 		# compute fitness
 		fitnesses = []
 
-		for j in range(0, len(response.solutions)):
+		for j in range(0, len(response.solutions)):  # todo : update deltas matrix after each compute delta
 			fitnesses.append(qap.compute_delta(response.solutions[j].i, response.solutions[j].j))
 
 		# send fitness
