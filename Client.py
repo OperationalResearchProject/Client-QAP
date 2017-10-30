@@ -33,24 +33,39 @@ def main(argv):
 def process_ts(channel, qap):
 	stub = tabousearch_pb2_grpc.TabouSearchServiceStub(channel=channel)
 
+	# Init solution for test
+	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
+	qap.swap_solution(3, 8)
+	fit = qap.compute_delta(3, 8)
+
+	print("full 3-8 : " + str(qap.full_eval()))
+	print("move 3-8 : " + str(fit))
+	print("sol  3-8 : " + qap.to_string())
+	print()
+
 	# Initialisation of the transaction
 	response = stub.InitTransaction(messages_pb2.InitTransactionRequest(
 			customer='Client-QAP-Test',
 			solutionSize=qap.solution_size,
 			type="qap",
-			fitness=9999999999,
+			fitness=fit,
 			solution=qap.to_string()
 	))
 
 	for i in range(10):
-		# compute fitness
 		fitnesses = []
 
 		for j in range(0, len(response.solutions)):
+			# swap and compute the solution
+			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
 			delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
+
 			# update deltas matrix after each compute delta
 			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
 			fitnesses.append(delta)
+
+			# swap solution to reset
+			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
 
 		# send fitness
 		mess = messages_pb2.MultiFitnessRequest(
@@ -68,7 +83,8 @@ def process_ts(channel, qap):
 		response = stub.SendFitness(mess)
 
 	stop = stub.StopTransaction(messages_pb2.StopRequest(id=response.id, message='done'))
-	print("Tabou Search process is ended, the best solution find for this transaction is " + str(stop.fitness))
+	print("Tabou Search process is finished, the best solution find for this transaction is ")
+	print(stop)
 
 
 if __name__ == "__main__":
