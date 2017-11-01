@@ -1,7 +1,7 @@
 from QAP import Qap
 
 
-qap = Qap(10)
+qap = Qap("test.txt")
 test_incremental_eval = True
 test_delta_matrix_value = True
 test_double_incremental_eval = True

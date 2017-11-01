@@ -1,9 +1,9 @@
 class Qap:
-	def __init__(self, solution_size):
-		self.solution_size = solution_size
+	def __init__(self, path):
+		self.solution_size = self.__get_solution_size(path)
 		self.solution = self.generate_solution()
-		self.mat_locations = self.__generate_locations()
-		self.mat_facilities = self.__generate_facilities()
+		self.mat_locations = self.__generate_locations(path)
+		self.mat_facilities = self.__generate_facilities(path)
 		self.deltas = self.__init_deltas()
 
 	def generate_solution(self):
@@ -27,11 +27,20 @@ class Qap:
 
 		return res[:-1]
 
-	def __generate_locations(self):
+	def __get_solution_size(self, path):
+		"""
+		:param path: path of file
+		:type path: str
+		:return: size of the solution read in file
+		"""
+		with open(path, "r") as f:
+			return int(f.readline().split(" ")[1])
+
+	def __generate_locations(self, path):
 		"""
 		:return: a matrix with locations load in a file
 		"""
-		with open("test.txt", "r") as f:
+		with open(path, "r") as f:
 			data = f.readlines()
 
 		i_line = 0
@@ -43,11 +52,11 @@ class Qap:
 
 		return locations
 
-	def __generate_facilities(self):
+	def __generate_facilities(self, path):
 		"""
 		:return: a matrix with facilities load in a file
 		"""
-		with open("test.txt", "r") as f:
+		with open(path, "r") as f:
 			data = f.readlines()
 
 		i_line = 0

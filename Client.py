@@ -8,7 +8,8 @@ from protoGenerated import messages_pb2
 
 
 def main(argv):
-	qap = Qap(10)
+	qap = Qap("test.txt")
+	#qap = Qap("qap_rl_30_1.dat")
 	server = '127.0.0.1:50051'
 	print("Connection to serveur " + server)
 
@@ -34,6 +35,7 @@ def process_ts(channel, qap):
 	stub = tabousearch_pb2_grpc.TabouSearchServiceStub(channel=channel)
 
 	# Init solution for test
+	# qap.solution = [13, 6, 2, 28, 18, 3, 16, 4, 17, 15, 1, 0, 9, 24, 23, 10, 20, 14, 21, 25, 26, 5, 12, 27, 11, 8, 7, 22, 19, 29]
 	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
 	qap.swap_solution(3, 8)
 	move_init = qap.compute_delta(3, 8)
@@ -53,7 +55,7 @@ def process_ts(channel, qap):
 			solution=qap.to_string()
 	))
 
-	for i in range(1000):
+	for i in range(2):
 		fitnesses = []
 
 		for j in range(0, len(response.solutions)):
