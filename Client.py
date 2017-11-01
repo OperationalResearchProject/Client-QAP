@@ -36,10 +36,11 @@ def process_ts(channel, qap):
 	# Init solution for test
 	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
 	qap.swap_solution(3, 8)
-	fit = qap.compute_delta(3, 8)
+	move_init = qap.compute_delta(3, 8)
+	fitness_init = qap.full_eval()
 
-	print("full 3-8 : " + str(qap.full_eval()))
-	print("move 3-8 : " + str(fit))
+	print("full 3-8 : " + str(fitness_init))
+	print("move 3-8 : " + str(move_init))
 	print("sol  3-8 : " + qap.to_string())
 	print()
 
@@ -48,21 +49,22 @@ def process_ts(channel, qap):
 			customer='Client-QAP-Test',
 			solutionSize=qap.solution_size,
 			type="qap",
-			fitness=fit,
+			fitness=fitness_init,
 			solution=qap.to_string()
 	))
 
-	for i in range(10):
+	for i in range(1000):
 		fitnesses = []
 
 		for j in range(0, len(response.solutions)):
 			# swap and compute the solution
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
-			delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
+			# delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
+			#
+			# # update deltas matrix after each compute delta
+			# qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
 
-			# update deltas matrix after each compute delta
-			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
-			fitnesses.append(delta)
+			fitnesses.append(qap.full_eval())  # todo : send fitness and not move ! delta + mother_fitness
 
 			# swap solution to reset
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
