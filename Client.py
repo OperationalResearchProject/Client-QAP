@@ -8,8 +8,8 @@ from protoGenerated import messages_pb2
 
 
 def main(argv):
-	qap = Qap("test.txt")
-	#qap = Qap("qap_rl_30_1.dat")
+	#qap = Qap("test.txt")
+	qap = Qap("qap_rl_30_1.dat")
 	server = '127.0.0.1:50051'
 	print("Connection to serveur " + server)
 
@@ -35,8 +35,8 @@ def process_ts(channel, qap):
 	stub = tabousearch_pb2_grpc.TabouSearchServiceStub(channel=channel)
 
 	# Init solution for test
-	# qap.solution = [13, 6, 2, 28, 18, 3, 16, 4, 17, 15, 1, 0, 9, 24, 23, 10, 20, 14, 21, 25, 26, 5, 12, 27, 11, 8, 7, 22, 19, 29]
-	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
+	qap.solution = [13, 6, 2, 28, 18, 3, 16, 4, 17, 15, 1, 0, 9, 24, 23, 10, 20, 14, 21, 25, 26, 5, 12, 27, 11, 8, 7, 22, 19, 29]
+	#qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
 	qap.swap_solution(3, 8)
 	move_init = qap.compute_delta(3, 8)
 	fitness_init = qap.full_eval()
@@ -55,18 +55,22 @@ def process_ts(channel, qap):
 			solution=qap.to_string()
 	))
 
-	for i in range(2):
+	for i in range(1):
 		fitnesses = []
 
 		for j in range(0, len(response.solutions)):
 			# swap and compute the solution
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
-			# delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
-			#
-			# # update deltas matrix after each compute delta
-			# qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
+			delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
 
-			fitnesses.append(qap.full_eval())  # todo : send fitness and not move ! delta + mother_fitness
+			# update deltas matrix after each compute delta
+			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
+
+			fitnesses.append(response.solutions[j].mother_fitness - delta)
+			# print("full = "+str(qap.full_eval()))
+			# print("delt = "+str(response.solutions[j].mother_fitness - delta))
+			# print("mother fit = "+str(response.solutions[j].mother_fitness))
+			# print()
 
 			# swap solution to reset
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
