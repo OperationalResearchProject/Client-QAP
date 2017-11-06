@@ -76,7 +76,7 @@ class Qap:
 		for i in range(self.solution_size):
 			delta_l = []
 			for j in range(self.solution_size):
-				delta_l.append(0)
+				delta_l.append(self.compute_delta(i, j))
 			deltas.append(delta_l)
 
 		return deltas

@@ -32,6 +32,7 @@ for i in range(1, qap.solution_size):
 			print("fitness ij = " + str(fitij))
 
 
+qap = Qap("test.txt")
 delta_ij = 0
 delta_ij_full = 0
 
