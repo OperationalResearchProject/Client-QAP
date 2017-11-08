@@ -174,3 +174,13 @@ class Qap:
 		tmp = self.solution[i]
 		self.solution[i] = self.solution[j]
 		self.solution[j] = tmp
+
+	def update_solution(self, new_solution):
+		"""
+		:param new_solution: new solution to update
+		:type new_solution: str
+		:return: update the solution
+		"""
+		tmp = new_solution.split("-")
+		for i in range(len(tmp)):
+			self.solution[i] = int(tmp[i])
