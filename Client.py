@@ -53,7 +53,7 @@ def process_ts(channel, qap):
 			solution=qap.to_string()
 	))
 
-	for i in range(1):
+	for i in range(10):
 		fitnesses = []
 
 		# todo : si c'est la meme mother_solution qu'avant, faut remettre un backup de delta ???
@@ -73,20 +73,28 @@ def process_ts(channel, qap):
 			                                j2=response.solutions[j].j)
 
 			# update deltas matrix after each compute delta
-			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
+			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta2
 
 			# prepare fitnesses array to send
-			fitnesses.append(response.solutions[j].mother_fitness - delta)
+			fitnesses.append(response.solutions[j].mother_fitness - delta2)
 
 			# Debug print
-			print("full == "+str(qap.full_eval()))
-			print("delt == " + str(response.solutions[j].mother_fitness - delta))
-			print("delt2 = " + str(response.solutions[j].mother_fitness - delta2))
-			if delta2 != delta:
-				print("\td1 = "+str(delta))
-				print("\td2 = "+str(delta2))
-				print("\tmoth i = "+str(response.solutions[j].mother_i))
-				print("\tmoth j = "+str(response.solutions[j].mother_j))
+			dfull = qap.full_eval()
+			dsimple = response.solutions[j].mother_fitness - delta
+			ddouble = response.solutions[j].mother_fitness - delta2
+			print("full == "+str(dfull))
+			print("delt == " + str(dsimple))
+			print("delt2 = " + str(ddouble))
+
+			if (dfull != ddouble) & (dfull != dsimple):  # todo : chercher un random dans le code server, sinon c'est sans doute que les tableau ne sont pas dans le bon ordre
+				print("iteration i = " + str(i))
+				print("delta = " + str(delta))
+				print("delta2 = " + str(delta2))
+				print("mother i = "+str(response.solutions[j].mother_i))
+				print("mother j = "+str(response.solutions[j].mother_j))
+				print("i = "+str(response.solutions[j].i))
+				print("j = "+str(response.solutions[j].j))
+				raise ValueError('A very specific bad thing happened.')
 			print()
 
 			# swap solution to reset
