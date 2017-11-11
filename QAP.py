@@ -141,7 +141,9 @@ class Qap:
 		:return: double incremental evaluation for a swap of i2 and j2 after i and j
 		"""
 
-		if (i == i2) & (j == j2):
+		if (i == -1) & (j == -1):  # specific to OR API, the API return -1 if it don't know mother i and mother j
+			return self.compute_delta(i=i2, j=j2)
+		elif (i == i2) & (j == j2):
 			return -delta
 		elif (i2 == i) | (i2 == j) | (j2 == i) | (j2 == j):
 			return self.compute_delta(i=i2, j=j2)

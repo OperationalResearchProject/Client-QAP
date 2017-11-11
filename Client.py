@@ -53,7 +53,7 @@ def process_ts(channel, qap):
 			solution=qap.to_string()
 	))
 
-	for i in range(2):
+	for i in range(1):
 		fitnesses = []
 
 		# todo : si c'est la meme mother_solution qu'avant, faut remettre un backup de delta ???
@@ -66,6 +66,11 @@ def process_ts(channel, qap):
 			# swap and compute the solution with simple incremental evaluation
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
 			delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
+			delta2 = qap.compute_delta_fast(delta=qap.deltas[response.solutions[j].i][response.solutions[j].j],
+			                                i=response.solutions[j].mother_i,
+			                                j=response.solutions[j].mother_j,
+			                                i2=response.solutions[j].i,
+			                                j2=response.solutions[j].j)
 
 			# update deltas matrix after each compute delta
 			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta
@@ -74,9 +79,14 @@ def process_ts(channel, qap):
 			fitnesses.append(response.solutions[j].mother_fitness - delta)
 
 			# Debug print
-			print("full = "+str(qap.full_eval()))
-			print("delt = "+str(response.solutions[j].mother_fitness - delta))
-			print("mother fit = "+str(response.solutions[j].mother_fitness))
+			print("full == "+str(qap.full_eval()))
+			print("delt == " + str(response.solutions[j].mother_fitness - delta))
+			print("delt2 = " + str(response.solutions[j].mother_fitness - delta2))
+			if delta2 != delta:
+				print("\td1 = "+str(delta))
+				print("\td2 = "+str(delta2))
+				print("\tmoth i = "+str(response.solutions[j].mother_i))
+				print("\tmoth j = "+str(response.solutions[j].mother_j))
 			print()
 
 			# swap solution to reset
