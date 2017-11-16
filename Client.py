@@ -72,30 +72,34 @@ def process_ts(channel, qap):
 			                                i2=response.solutions[j].i,
 			                                j2=response.solutions[j].j)
 
+			# Debug print
+			dfull = qap.full_eval()
+			dsimple = response.solutions[j].mother_fitness - delta
+			ddouble = response.solutions[j].mother_fitness - delta2
+			print("full == " + str(dfull))
+			print("delt == " + str(dsimple))
+			print("delt2 = " + str(ddouble))
+
+			if (dfull != ddouble) & (dfull != dsimple): # dfull is good (checked with c++ code)
+				# todo : chercher un random dans le code server sinon peut-etre que les tableau ne sont pas dans le bon ordre
+				# todo : semble exploser quand i = 0, j = 1, mother_i = 1 et mother_j = 3
+
+				# todo : test en enlevant delta2 et essayer de reproduire le bug
+				print("iteration i = " + str(i))
+				print("curent sol = " + str(qap.to_string()))
+				print("delta = " + str(delta))
+				print("delta2 = " + str(delta2))
+				print("del old = " + str(qap.deltas[response.solutions[j].i][response.solutions[j].j]))
+				print(response.solutions[j])
+
+				raise ValueError('The fitness seems to be bad.')
+			print()
+
 			# update deltas matrix after each compute delta
 			qap.deltas[response.solutions[j].i][response.solutions[j].j] = delta2
 
 			# prepare fitnesses array to send
 			fitnesses.append(response.solutions[j].mother_fitness - delta2)
-
-			# Debug print
-			dfull = qap.full_eval()
-			dsimple = response.solutions[j].mother_fitness - delta
-			ddouble = response.solutions[j].mother_fitness - delta2
-			print("full == "+str(dfull))
-			print("delt == " + str(dsimple))
-			print("delt2 = " + str(ddouble))
-
-			if (dfull != ddouble) & (dfull != dsimple):  # todo : chercher un random dans le code server, sinon c'est sans doute que les tableau ne sont pas dans le bon ordre
-				print("iteration i = " + str(i))
-				print("delta = " + str(delta))
-				print("delta2 = " + str(delta2))
-				print("mother i = "+str(response.solutions[j].mother_i))
-				print("mother j = "+str(response.solutions[j].mother_j))
-				print("i = "+str(response.solutions[j].i))
-				print("j = "+str(response.solutions[j].j))
-				raise ValueError('A very specific bad thing happened.')
-			print()
 
 			# swap solution to reset
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
