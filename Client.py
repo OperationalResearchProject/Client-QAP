@@ -56,8 +56,6 @@ def process_ts(channel, qap):
 	for i in range(10):
 		fitnesses = []
 
-		# todo : si c'est la meme mother_solution qu'avant, faut remettre un backup de delta ???
-		# todo : (car delta est modifié à chaque fois)
 		for j in range(0, len(response.solutions)):
 			# solution have to be updated with the mother solution
 			if j == 0:
@@ -67,29 +65,31 @@ def process_ts(channel, qap):
 			qap.swap_solution(response.solutions[j].i, response.solutions[j].j)
 			delta = qap.compute_delta(response.solutions[j].i, response.solutions[j].j)
 			delta2 = qap.compute_delta_fast(delta=qap.deltas[response.solutions[j].i][response.solutions[j].j],
-			                                i=response.solutions[j].mother_i,
-			                                j=response.solutions[j].mother_j,
-			                                i2=response.solutions[j].i,
-			                                j2=response.solutions[j].j)
+			                                mother_i=response.solutions[j].mother_i,
+			                                mother_j=response.solutions[j].mother_j,
+			                                i=response.solutions[j].i,
+			                                j=response.solutions[j].j)
 
 			# Debug print
 			dfull = qap.full_eval()
 			dsimple = response.solutions[j].mother_fitness - delta
 			ddouble = response.solutions[j].mother_fitness - delta2
-			print("full == " + str(dfull))
-			print("delt == " + str(dsimple))
-			print("delt2 = " + str(ddouble))
 
-			if (dfull != ddouble) & (dfull != dsimple): # dfull is good (checked with c++ code)
-				# todo : chercher un random dans le code server sinon peut-etre que les tableau ne sont pas dans le bon ordre
-				# todo : semble exploser quand i = 0, j = 1, mother_i = 1 et mother_j = 3
+			print("computed delta["+str(response.solutions[j].i)+"]["+str(response.solutions[j].j)+"] = "+str(delta))
+			print("computed delta2["+str(response.solutions[j].i)+"]["+str(response.solutions[j].j)+"] = "+str(delta2))
 
-				# todo : test en enlevant delta2 et essayer de reproduire le bug
-				print("iteration i = " + str(i))
-				print("curent sol = " + str(qap.to_string()))
-				print("delta = " + str(delta))
-				print("delta2 = " + str(delta2))
-				print("del old = " + str(qap.deltas[response.solutions[j].i][response.solutions[j].j]))
+			if delta != delta2:  # todo : the problem is delta2
+				# todo : why  fitness_double + abs(delta_simple) + abs(delta double) = true_fitness ??
+				print("\n\n =============== DEBUG : ================")
+				print("iteration n° " + str(i)+"/10")
+				print("current solution = " + str(qap.to_string()))
+				print("fitness mother = " + str(response.solutions[j].mother_fitness))  # fitness of mother solution
+				print("delta simple / delta double = " + str(delta) + " / " + str(delta2))
+				print("fitness full   = " + str(dfull))    # full evaluation
+				print("fitness simple = " + str(dsimple))  # simple incremental eval
+				print("fitness double = " + str(ddouble))  # double incremental eval
+
+				print("\nSolution received :")
 				print(response.solutions[j])
 
 				raise ValueError('The fitness seems to be bad.')

@@ -123,48 +123,49 @@ class Qap:
 
 		return delta
 
-	def compute_delta_fast(self, delta, i, j, i2, j2):
+	def compute_delta_fast(self, delta, mother_i, mother_j, i, j):
 		"""
 		 For ex. see E. Taillard, "COMPARISON OF ITERATIVE SEARCHES FOR THE QUADRATIC ASSIGNMENT PROBLEM",
 		 ECOLE PLOYTECHNIQUE FÉDÉRALE DE LAUSANNE (EPFL), 1994.
 
-		:param i: index of previous swap
-		:param j: index of previous swap
-		:param i2: index to swap
-		:param j2: index to swap
+		:param mother_i: index of previous swap
+		:param mother_j: index of previous swap
+		:param i: index to swap
+		:param j: index to swap
 		:param delta: previous delta compute for the swap of i and j
+		:type mother_i: int
+		:type mother_j: int
 		:type i: int
 		:type j: int
-		:type i2: int
-		:type j2: int
 		:type delta: int
 		:return: double incremental evaluation for a swap of i2 and j2 after i and j
 		"""
 
-		if (i == -1) & (j == -1):  # specific to OR API, the API return -1 if it don't know mother i and mother j
-			return self.compute_delta(i=i2, j=j2)
-		elif (i == i2) & (j == j2):
+		if (mother_i == -1) & (mother_j == -1):  # specific to OR API, the API return -1 if it don't know mother i and mother j
+			return self.compute_delta(i=i, j=j)
+		elif (mother_i == i) & (mother_j == j):
 			return -delta
-		elif (i2 == i) | (i2 == j) | (j2 == i) | (j2 == j):
-			return self.compute_delta(i=i2, j=j2)
+		elif (i == mother_i) | (i == mother_j) | (j == mother_i) | (j == mother_j):
+			return self.compute_delta(i=i, j=j)
 		else:
+			print("delta_old = " + str(delta) + " / mother_i = " + str(mother_i) + " / mother_j = " + str(mother_j) + " / i = " + str(i) + " / j = " + str(j))
 			return (delta
-			        + (self.mat_locations[i][i2]
-			           - self.mat_locations[i][j2]
-			           + self.mat_locations[j][j2]
-			           - self.mat_locations[j][i2])
-			        * (self.mat_facilities[self.solution[j]][self.solution[i2]]
-			           - self.mat_facilities[self.solution[j]][self.solution[j2]]
-			           + self.mat_facilities[self.solution[i]][self.solution[j2]]
-			           - self.mat_facilities[self.solution[i]][self.solution[i2]])
-			        + (self.mat_locations[i2][i]
-			           - self.mat_locations[j2][i]
-			           + self.mat_locations[j2][j]
-			           - self.mat_locations[i2][j])
-			        * (self.mat_facilities[self.solution[i2]][self.solution[j]]
-			           - self.mat_facilities[self.solution[j2]][self.solution[j]]
-			           + self.mat_facilities[self.solution[j2]][self.solution[i]]
-			           - self.mat_facilities[self.solution[i2]][self.solution[i]])
+			        + (self.mat_locations[mother_i][i]
+			           - self.mat_locations[mother_i][j]
+			           + self.mat_locations[mother_j][j]
+			           - self.mat_locations[mother_j][i])
+			        * (self.mat_facilities[self.solution[mother_j]][self.solution[i]]
+			           - self.mat_facilities[self.solution[mother_j]][self.solution[j]]
+			           + self.mat_facilities[self.solution[mother_i]][self.solution[j]]
+			           - self.mat_facilities[self.solution[mother_i]][self.solution[i]])
+			        + (self.mat_locations[i][mother_i]
+			           - self.mat_locations[j][mother_i]
+			           + self.mat_locations[j][mother_j]
+			           - self.mat_locations[i][mother_j])
+			        * (self.mat_facilities[self.solution[i]][self.solution[mother_j]]
+			           - self.mat_facilities[self.solution[j]][self.solution[mother_j]]
+			           + self.mat_facilities[self.solution[j]][self.solution[mother_i]]
+			           - self.mat_facilities[self.solution[i]][self.solution[mother_i]])
 			        )
 
 	def swap_solution(self, i, j):
