@@ -1,5 +1,6 @@
 import sys
 import getopt
+import Config
 
 import grpc
 from QAP import Qap
@@ -8,9 +9,9 @@ from protoGenerated import messages_pb2
 
 
 def main(argv):
-	qap = Qap("test.txt")
-	server = '127.0.0.1:50051'
-	print("Connection to serveur " + server)
+	qap = Qap(Config.qap_file)
+	server = Config.server + ":" + Config.port
+	print("Connection to server " + server)
 
 	channel = grpc.insecure_channel(server)
 
@@ -34,14 +35,14 @@ def process_ts(channel, qap):
 	stub = tabousearch_pb2_grpc.TabouSearchServiceStub(channel=channel)
 
 	# Init solution for test
-	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]
-	qap.swap_solution(3, 8)
-	move_init = qap.compute_delta(3, 8)
-	fitness_init = qap.full_eval()
+	qap.solution = [4, 2, 1, 9, 7, 3, 0, 8, 6, 5]  # todo : remove after debug
+	qap.swap_solution(3, 8)  # todo : remove after debug
+	move_init = qap.compute_delta(3, 8)  # todo : remove after debug
+	fitness_init = qap.full_eval()  # todo : remove after debug
 
-	print("full 3-8 : " + str(fitness_init))
-	print("move 3-8 : " + str(move_init))
-	print("sol  3-8 : " + qap.to_string())
+	print("full_ 3-8 : " + str(fitness_init))  # todo : remove after debug
+	print("delta 3-8 : " + str(move_init))  # todo : remove after debug
+	print("sol_  3-8 : " + qap.to_string())  # todo : remove after debug
 	print()
 
 	# Initialisation of the transaction
@@ -79,7 +80,7 @@ def process_ts(channel, qap):
 			print("computed delta2["+str(response.solutions[j].i)+"]["+str(response.solutions[j].j)+"] = "+str(delta2))
 
 			if delta != delta2:  # todo : the problem is delta2
-				# todo : why  fitness_double + abs(delta_simple) + abs(delta double) = true_fitness ??
+				#  todo : the problem is the previous delta value or the compute value ??
 				print("\n\n =============== DEBUG : ================")
 				print("iteration n° " + str(i)+"/10")
 				print("current solution = " + str(qap.to_string()))
