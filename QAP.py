@@ -148,7 +148,25 @@ class Qap:
 		elif (i == mother_i) | (i == mother_j) | (j == mother_i) | (j == mother_j):
 			return self.compute_delta(i=i, j=j)
 		else:
-			print("delta_old = " + str(delta) + " / mother_i = " + str(mother_i) + " / mother_j = " + str(mother_j) + " / i = " + str(i) + " / j = " + str(j))
+			# grp1 = (self.mat_locations[mother_i][i]
+			#         - self.mat_locations[mother_i][j]
+			#         + self.mat_locations[mother_j][j]
+			#         - self.mat_locations[mother_j][i])
+			# grp2 = (self.mat_facilities[self.solution[mother_j]][self.solution[i]]
+			#         - self.mat_facilities[self.solution[mother_j]][self.solution[j]]
+			#         + self.mat_facilities[self.solution[mother_i]][self.solution[j]]
+			#         - self.mat_facilities[self.solution[mother_i]][self.solution[i]])
+			# grp3 = (self.mat_locations[i][mother_i]
+			#         - self.mat_locations[j][mother_i]
+			#         + self.mat_locations[j][mother_j]
+			#         - self.mat_locations[i][mother_j])
+			# grp4 = (self.mat_facilities[self.solution[i]][self.solution[mother_j]]
+			#         - self.mat_facilities[self.solution[j]][self.solution[mother_j]]
+			#         + self.mat_facilities[self.solution[j]][self.solution[mother_i]]
+			#         - self.mat_facilities[self.solution[i]][self.solution[mother_i]])
+			#
+			# print("debug = " + str(delta) + "+" + str(grp1) + "*" + str(grp2) + "+" + str(grp3) + "*" + str(grp4))
+			# return delta + grp1 * grp2 + grp3 * grp4
 			return (delta
 			        + (self.mat_locations[mother_i][i]
 			           - self.mat_locations[mother_i][j]
